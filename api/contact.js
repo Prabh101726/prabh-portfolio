@@ -1,14 +1,22 @@
 /**
- * Portfolio contact form — nothing sensitive in Portfolio.html.
+ * Portfolio contact — mail is sent only from this server (not exposed in HTML).
  *
- * Configure ONE of these in Vercel → Environment Variables:
+ * Use ONE of these in Vercel → Environment Variables (then redeploy):
  *
- *   WEB3FORMS_ACCESS_KEY  — recommended: https://web3forms.com (free, no captcha for API)
- *   RESEND_API_KEY        — https://resend.com (also set CONTACT_TO_EMAIL or use default below)
+ *   Gmail (simple if you use Google Mail)
+ *     GMAIL_USER              — full address, e.g. preetjassgill11@gmail.com
+ *     GMAIL_APP_PASSWORD      — 16-char App Password (Google Account → Security → 2-Step → App passwords)
+ *     CONTACT_TO_EMAIL        — optional; where to deliver (defaults to GMAIL_USER)
  *
- * Optional: CONTACT_TO_EMAIL — recipient when using Resend only (Web3Forms uses your form’s email).
- * Optional: RESEND_FROM_EMAIL — verified sender for Resend.
+ *   Resend
+ *     RESEND_API_KEY
+ *     CONTACT_TO_EMAIL        — inbox (optional default in code for Resend only)
+ *     RESEND_FROM_EMAIL       — optional verified sender
+ *
+ * Web3Forms from Vercel serverless is not supported on the free plan (their docs: paid + IP allowlist).
  */
+
+const nodemailer = require('nodemailer');
 
 const DEFAULT_INBOX = 'preetjassgill11@gmail.com';
 
@@ -62,9 +70,9 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ ok: false, error: 'Invalid email address.' }));
   }
 
-  const resendKey = process.env.RESEND_API_KEY;
-  const web3Key = process.env.WEB3FORMS_ACCESS_KEY;
-  const recipient = (process.env.CONTACT_TO_EMAIL || DEFAULT_INBOX).trim();
+  const resendKey = (process.env.RESEND_API_KEY || '').trim();
+  const gmailUser = (process.env.GMAIL_USER || '').trim();
+  const gmailPass = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s/g, '');
   const from =
     process.env.RESEND_FROM_EMAIL || 'Portfolio <onboarding@resend.dev>';
 
@@ -72,16 +80,19 @@ module.exports = async function handler(req, res) {
     return sendViaResend(res, {
       apiKey: resendKey,
       from,
-      to: recipient,
+      to: process.env.CONTACT_TO_EMAIL?.trim() || DEFAULT_INBOX,
       name,
       email,
       message,
     });
   }
 
-  if (web3Key) {
-    return sendViaWeb3Forms(res, {
-      accessKey: web3Key,
+  if (gmailUser && gmailPass) {
+    const to = (process.env.CONTACT_TO_EMAIL || gmailUser).trim();
+    return sendViaGmail(res, {
+      user: gmailUser,
+      pass: gmailPass,
+      to,
       name,
       email,
       message,
@@ -93,10 +104,48 @@ module.exports = async function handler(req, res) {
     JSON.stringify({
       ok: false,
       error:
-        'Add WEB3FORMS_ACCESS_KEY in Vercel (free: web3forms.com) or RESEND_API_KEY. FormSubmit was removed — it blocks most server-side sends.',
+        'Mail not configured. In Vercel add GMAIL_USER + GMAIL_APP_PASSWORD (Gmail), or RESEND_API_KEY. Redeploy after saving.',
     })
   );
 };
+
+async function sendViaGmail(res, { user, pass, to, name, email, message }) {
+  const html = `
+    <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+    <p><strong>Reply to:</strong> ${escapeHtml(email)}</p>
+    <p><strong>Message:</strong></p>
+    <p style="white-space:pre-wrap">${escapeHtml(message)}</p>
+  `;
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user, pass },
+    });
+
+    await transporter.sendMail({
+      from: `"Portfolio contact" <${user}>`,
+      to,
+      replyTo: email,
+      subject: `Portfolio contact: ${name.slice(0, 80)}`,
+      text: `Name: ${name}\nReply to: ${email}\n\n${message}`,
+      html,
+    });
+
+    res.statusCode = 200;
+    return res.end(JSON.stringify({ ok: true, id: null }));
+  } catch (err) {
+    console.error('Gmail send error:', err.message);
+    res.statusCode = 502;
+    return res.end(
+      JSON.stringify({
+        ok: false,
+        error:
+          'Could not send email. Check GMAIL_USER / GMAIL_APP_PASSWORD in Vercel and that 2-Step Verification + App Password are enabled.',
+      })
+    );
+  }
+}
 
 async function sendViaResend(res, { apiKey, from, to, name, email, message }) {
   const html = `
@@ -138,48 +187,6 @@ async function sendViaResend(res, { apiKey, from, to, name, email, message }) {
 
     res.statusCode = 200;
     return res.end(JSON.stringify({ ok: true, id: data.id || null }));
-  } catch {
-    res.statusCode = 502;
-    return res.end(
-      JSON.stringify({ ok: false, error: 'Could not send message. Try again later.' })
-    );
-  }
-}
-
-async function sendViaWeb3Forms(res, { accessKey, name, email, message }) {
-  try {
-    const r = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        access_key: accessKey,
-        subject: `Portfolio contact: ${name.slice(0, 80)}`,
-        name,
-        email,
-        message,
-        from_name: name,
-        replyto: email,
-      }),
-    });
-
-    const data = await r.json().catch(() => ({}));
-    const ok = r.ok && data.success === true;
-
-    if (!ok) {
-      res.statusCode = 502;
-      return res.end(
-        JSON.stringify({
-          ok: false,
-          error:
-            typeof data.message === 'string' && data.message.length < 120
-              ? data.message
-              : 'Could not send message. Check WEB3FORMS_ACCESS_KEY in Vercel.',
-        })
-      );
-    }
-
-    res.statusCode = 200;
-    return res.end(JSON.stringify({ ok: true, id: null }));
   } catch {
     res.statusCode = 502;
     return res.end(
