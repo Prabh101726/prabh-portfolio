@@ -4,7 +4,7 @@ Single-page portfolio (static HTML/CSS/JS).
 
 ## Local preview
 
-Open `index.html` in a browser, or run:
+Open `Portfolio.html` in a browser, or run:
 
 ```bash
 npx --yes serve .
@@ -19,5 +19,7 @@ npx --yes serve .
    - **Build Command:** *(leave empty)*
    - **Output Directory:** *(leave empty — site root)*
 4. Deploy. Your site will be live at `*.vercel.app`; add a custom domain under **Settings → Domains** if you want.
+
+The main file is **`Portfolio.html`**. **`vercel.json`** rewrites `/` → `/Portfolio.html` so your domain root still shows the portfolio.
 
 No environment variables required for this static page.
