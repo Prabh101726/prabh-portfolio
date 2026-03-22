@@ -1,11 +1,13 @@
 /**
- * Portfolio contact form — inbox is server-side only (not exposed in Portfolio.html).
+ * Portfolio contact form — nothing sensitive in Portfolio.html.
  *
- * Sending (first match wins):
- *   1) Resend — set RESEND_API_KEY (+ optional CONTACT_TO_EMAIL, RESEND_FROM_EMAIL)
- *   2) FormSubmit — no API key; uses CONTACT_TO_EMAIL or default inbox below
+ * Configure ONE of these in Vercel → Environment Variables:
  *
- * Optional env: CONTACT_TO_EMAIL overrides the default recipient for both paths.
+ *   WEB3FORMS_ACCESS_KEY  — recommended: https://web3forms.com (free, no captcha for API)
+ *   RESEND_API_KEY        — https://resend.com (also set CONTACT_TO_EMAIL or use default below)
+ *
+ * Optional: CONTACT_TO_EMAIL — recipient when using Resend only (Web3Forms uses your form’s email).
+ * Optional: RESEND_FROM_EMAIL — verified sender for Resend.
  */
 
 const DEFAULT_INBOX = 'preetjassgill11@gmail.com';
@@ -60,16 +62,40 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ ok: false, error: 'Invalid email address.' }));
   }
 
+  const resendKey = process.env.RESEND_API_KEY;
+  const web3Key = process.env.WEB3FORMS_ACCESS_KEY;
   const recipient = (process.env.CONTACT_TO_EMAIL || DEFAULT_INBOX).trim();
-  const apiKey = process.env.RESEND_API_KEY;
   const from =
     process.env.RESEND_FROM_EMAIL || 'Portfolio <onboarding@resend.dev>';
 
-  if (apiKey) {
-    return sendViaResend(res, { apiKey, from, to: recipient, name, email, message });
+  if (resendKey) {
+    return sendViaResend(res, {
+      apiKey: resendKey,
+      from,
+      to: recipient,
+      name,
+      email,
+      message,
+    });
   }
 
-  return sendViaFormSubmit(res, { recipient, name, email, message });
+  if (web3Key) {
+    return sendViaWeb3Forms(res, {
+      accessKey: web3Key,
+      name,
+      email,
+      message,
+    });
+  }
+
+  res.statusCode = 503;
+  return res.end(
+    JSON.stringify({
+      ok: false,
+      error:
+        'Add WEB3FORMS_ACCESS_KEY in Vercel (free: web3forms.com) or RESEND_API_KEY. FormSubmit was removed — it blocks most server-side sends.',
+    })
+  );
 };
 
 async function sendViaResend(res, { apiKey, from, to, name, email, message }) {
@@ -120,29 +146,24 @@ async function sendViaResend(res, { apiKey, from, to, name, email, message }) {
   }
 }
 
-async function sendViaFormSubmit(res, { recipient, name, email, message }) {
-  const url = `https://formsubmit.co/ajax/${encodeURIComponent(recipient)}`;
-
+async function sendViaWeb3Forms(res, { accessKey, name, email, message }) {
   try {
-    const r = await fetch(url, {
+    const r = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
+        access_key: accessKey,
+        subject: `Portfolio contact: ${name.slice(0, 80)}`,
         name,
         email,
         message,
-        _subject: `Portfolio contact: ${name.slice(0, 80)}`,
-        _captcha: false,
-        _template: 'table',
+        from_name: name,
+        replyto: email,
       }),
     });
 
     const data = await r.json().catch(() => ({}));
-    const ok =
-      r.ok && (data.success === true || data.success === 'true');
+    const ok = r.ok && data.success === true;
 
     if (!ok) {
       res.statusCode = 502;
@@ -150,7 +171,9 @@ async function sendViaFormSubmit(res, { recipient, name, email, message }) {
         JSON.stringify({
           ok: false,
           error:
-            'Could not send message. If this is the first time, check the inbox for a FormSubmit activation link.',
+            typeof data.message === 'string' && data.message.length < 120
+              ? data.message
+              : 'Could not send message. Check WEB3FORMS_ACCESS_KEY in Vercel.',
         })
       );
     }
