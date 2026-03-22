@@ -709,6 +709,16 @@ section { padding:6rem 4rem; border-top:1px solid var(--border); }
 .contact-form-group input:focus, .contact-form-group textarea:focus {
   border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,107,0,0.08);
 }
+.contact-form-status {
+  font-family:var(--mono); font-size:12px; margin-top:1rem;
+  min-height:1.3em; color:var(--muted);
+}
+.contact-form-status.err { color:#e07060; }
+.contact-form-status.ok { color:#6bc96b; }
+.contact-hp {
+  position:absolute; left:-9999px; width:1px; height:1px;
+  overflow:hidden; opacity:0; pointer-events:none;
+}
 
 footer {
   padding:2rem 4rem; border-top:1px solid var(--border);
@@ -1004,10 +1014,14 @@ app = FastAPI()
       </div>
     </div>
     <div class="contact-right">
-      <div class="contact-form-group"><label>Your name</label><input type="text" placeholder="Company or your name"></div>
-      <div class="contact-form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
-      <div class="contact-form-group"><label>Message</label><textarea rows="4" placeholder="What are you working on?"></textarea></div>
-      <button class="btn-primary" id="sendBtn" style="width:100%;border:none;cursor:none;font-size:13px">Send Message</button>
+      <form id="contactForm" novalidate>
+        <div class="contact-form-group"><label for="contactName">Your name</label><input id="contactName" name="name" type="text" autocomplete="name" placeholder="Company or your name" required maxlength="200"></div>
+        <div class="contact-form-group"><label for="contactEmail">Email</label><input id="contactEmail" name="email" type="email" autocomplete="email" placeholder="your@email.com" required maxlength="320"></div>
+        <div class="contact-form-group"><label for="contactMessage">Message</label><textarea id="contactMessage" name="message" rows="4" placeholder="What are you working on?" required maxlength="8000"></textarea></div>
+        <label class="contact-hp" for="contactHp">Leave blank</label><input class="contact-hp" id="contactHp" name="_hp" type="text" tabindex="-1" autocomplete="off">
+        <button class="btn-primary" id="sendBtn" type="submit" style="width:100%;border:none;cursor:none;font-size:13px">Send Message</button>
+        <p class="contact-form-status" id="contactStatus" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </section>
@@ -1078,11 +1092,55 @@ for (let i = 0; i < 9; i++) {
   tl.appendChild(l);
 }
 
-// Send
-document.getElementById('sendBtn').addEventListener('click', function() {
-  this.textContent = 'Message sent!';
-  this.style.background = '#1a5c2a';
-  setTimeout(() => { this.textContent = 'Send Message'; this.style.background = ''; }, 3000);
+// Contact form → /api/contact (recipient only on server / Vercel env)
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('sendBtn');
+  const status = document.getElementById('contactStatus');
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+  const _hp = document.getElementById('contactHp').value.trim();
+  status.textContent = '';
+  status.className = 'contact-form-status';
+  if (!name || !email || !message) {
+    status.classList.add('err');
+    status.textContent = 'Please fill in name, email, and message.';
+    return;
+  }
+  btn.disabled = true;
+  const prevText = btn.textContent;
+  btn.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message, _hp }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
+      status.classList.add('ok');
+      status.textContent = 'Message sent. I will get back to you soon.';
+      btn.textContent = 'Sent';
+      btn.style.background = '#1a5c2a';
+      document.getElementById('contactMessage').value = '';
+      setTimeout(() => {
+        btn.textContent = prevText;
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 4000);
+    } else {
+      status.classList.add('err');
+      status.textContent = data.error || 'Something went wrong. Please try again or use LinkedIn.';
+      btn.textContent = prevText;
+      btn.disabled = false;
+    }
+  } catch {
+    status.classList.add('err');
+    status.textContent = 'Network error. Check your connection or try LinkedIn.';
+    btn.textContent = prevText;
+    btn.disabled = false;
+  }
 });
 
 // Nav highlight on scroll
