@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prabh — SaaS Founder & AI Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FF6B00;
+  --orange-dim: #cc5500;
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #161616;
+  --border: rgba(255,107,0,0.15);
+  --text: #e8e6e0;
+  --muted: #666;
+  --mono: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* Cursor */
+.cursor {
+  position:fixed; width:10px; height:10px;
+  background:var(--orange); border-radius:50%;
+  pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform .1s;
+}
+.cursor-ring {
+  position:fixed; width:36px; height:36px;
+  border:1px solid rgba(255,107,0,0.5); border-radius:50%;
+  pointer-events:none; z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:width .2s, height .2s, border-color .2s;
+}
+.cursor-ring.big { width:54px; height:54px; border-color:var(--orange); }
+
+/* Noise */
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:100; opacity:0.5;
+}
+
+/* Loader */
+#loader {
+  position:fixed; inset:0; background:var(--bg);
+  z-index:10000; display:flex; align-items:center;
+  justify-content:center; flex-direction:column; gap:1.5rem;
+  transition:opacity .6s ease, visibility .6s ease;
+}
+#loader.gone { opacity:0; visibility:hidden; }
+.loader-word {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:3.5rem; letter-spacing:10px; color:var(--orange);
+}
+.loader-bar-wrap {
+  width:220px; height:1px;
+  background:rgba(255,107,0,0.15); position:relative; overflow:hidden;
+}
+.loader-bar {
+  position:absolute; left:0; top:0; bottom:0;
+  background:var(--orange); width:0%;
+  animation:lbar 1s ease forwards .1s;
+}
+@keyframes lbar { to { width:100%; } }
+.loader-num {
+  font-family:var(--mono); font-size:11px;
+  color:var(--muted); letter-spacing:3px;
+}
+
+/* Nav */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.2rem 4rem;
+  background:rgba(10,10,10,0.88); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  transform:translateY(-100%);
+  animation:navDown .5s ease forwards 1.3s;
+}
+@keyframes navDown { to { transform:translateY(0); } }
+.nav-logo {
+  font-family:'Bebas Neue',sans-serif; font-size:1.5rem;
+  letter-spacing:3px; color:var(--orange); text-decoration:none;
+}
+.nav-links { display:flex; gap:2.5rem; list-style:none; }
+.nav-links a {
+  color:var(--muted); text-decoration:none;
+  font-size:13px; font-family:var(--mono);
+  letter-spacing:1px; text-transform:uppercase;
+  transition:color .2s; position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; left:0; bottom:-3px;
+  width:0; height:1px; background:var(--orange);
+  transition:width .25s ease;
+}
+.nav-links a:hover { color:var(--orange); }
+.nav-links a:hover::after { width:100%; }
+
+/* Hero */
+#hero {
+  min-height:100vh; display:flex; flex-direction:column;
+  justify-content:center; padding:0 4rem;
+  position:relative; overflow:hidden;
+}
+.grid-line {
+  position:absolute; top:0; bottom:0; width:1px;
+  background:linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  opacity:0; animation:fadeIn .8s ease forwards 1.5s;
+}
+@keyframes fadeIn { to { opacity:1; } }
+
+.hero-orb {
+  position:absolute; right:6%; top:50%;
+  transform:translateY(-50%);
+  width:340px; height:340px; border-radius:50%;
+  background:radial-gradient(circle at 38% 38%, rgba(255,107,0,0.16), transparent 68%);
+  animation:orbBob 7s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes orbBob {
+  0%,100% { transform:translateY(-50%) scale(1); }
+  50% { transform:translateY(calc(-50% - 18px)) scale(1.04); }
+}
+.hero-ring {
+  position:absolute; right:6%; top:50%;
+  transform:translate(50%,-50%);
+  width:340px; height:340px; border-radius:50%;
+  border:1px solid rgba(255,107,0,0.1);
+  animation:ringRot 22s linear infinite; pointer-events:none;
+}
+.hero-ring::before {
+  content:''; position:absolute; top:-5px; left:50%;
+  width:10px; height:10px; background:var(--orange);
+  border-radius:50%; transform:translateX(-50%);
+  box-shadow:0 0 12px rgba(255,107,0,0.6);
+}
+@keyframes ringRot { to { transform:translate(50%,-50%) rotate(360deg); } }
+
+.eyebrow {
+  font-family:var(--mono); font-size:12px; color:var(--orange);
+  letter-spacing:4px; text-transform:uppercase;
+  margin-bottom:1.5rem;
+  opacity:0; animation:fadeUp .6s ease forwards 1.4s;
+}
+.hero-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(6rem,13vw,11rem); line-height:0.88;
+  letter-spacing:2px; overflow:hidden;
+}
+.name-line {
+  display:block;
+  transform:translateY(110%);
+  animation:lineUp .75s cubic-bezier(.16,1,.3,1) forwards;
+}
+.name-line:nth-child(1) { animation-delay:1.4s; }
+.name-line:nth-child(2) { animation-delay:1.55s; color:var(--orange); }
+
+@keyframes lineUp { to { transform:translateY(0); } }
+
+.hero-title {
+  font-size:clamp(.95rem,2vw,1.2rem); color:var(--muted);
+  font-weight:300; margin-top:1.8rem; max-width:500px;
+  opacity:0; animation:fadeUp .6s ease forwards 1.7s;
+}
+.hero-cta {
+  display:flex; gap:1rem; margin-top:3rem;
+  opacity:0; animation:fadeUp .6s ease forwards 1.85s;
+}
+.btn-primary {
+  padding:.85rem 2.2rem; background:var(--orange); color:#000;
+  font-family:var(--mono); font-size:13px; font-weight:500;
+  letter-spacing:1px; text-decoration:none; text-transform:uppercase;
+  position:relative; overflow:hidden;
+  transition:transform .15s, box-shadow .2s;
+}
+.btn-primary::after {
+  content:''; position:absolute; inset:0;
+  background:rgba(255,255,255,0.12);
+  transform:translateX(-100%); transition:transform .3s ease;
+}
+.btn-primary:hover::after { transform:translateX(0); }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(255,107,0,0.28); }
+.btn-outline {
+  padding:.85rem 2.2rem; border:1px solid var(--border);
+  color:var(--muted); font-family:var(--mono);
+  font-size:13px; letter-spacing:1px;
+  text-decoration:none; text-transform:uppercase;
+  transition:border-color .2s, color .2s, transform .15s;
+}
+.btn-outline:hover { border-color:var(--orange); color:var(--orange); transform:translateY(-2px); }
+
+.hero-stats {
+  display:flex; gap:3rem; margin-top:5rem;
+  padding-top:2.5rem; border-top:1px solid var(--border);
+  opacity:0; animation:fadeUp .6s ease forwards 2s;
+}
+.stat-num {
+  font-family:'Bebas Neue',sans-serif; font-size:2.8rem;
+  color:var(--orange); line-height:1;
+}
+.stat-label {
+  font-size:12px; color:var(--muted); font-family:var(--mono);
+  letter-spacing:1px; text-transform:uppercase; margin-top:4px;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* Marquee */
+.marquee-wrap {
+  overflow:hidden; border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:.9rem 0; background:var(--bg2);
+}
+.marquee-track {
+  display:flex; animation:marquee 20s linear infinite; white-space:nowrap;
+}
+.marquee-track:hover { animation-play-state:paused; }
+.marquee-item {
+  font-family:'Bebas Neue',sans-serif; font-size:1rem;
+  letter-spacing:4px; color:var(--muted);
+  padding:0 2rem; flex-shrink:0; transition:color .2s;
+}
+.marquee-item:hover { color:var(--orange); }
+.marquee-dot { color:var(--orange); }
+@keyframes marquee { to { transform:translateX(-50%); } }
+
+/* Sections */
+section { padding:6rem 4rem; border-top:1px solid var(--border); }
+.section-tag {
+  font-family:var(--mono); font-size:11px; color:var(--orange);
+  letter-spacing:4px; text-transform:uppercase; margin-bottom:1rem;
+}
+.section-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,5vw,4rem);
+  letter-spacing:2px; line-height:1; margin-bottom:3rem;
+}
+
+/* Reveal animations */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+.reveal.on { opacity:1; transform:translateY(0); }
+.rl { opacity:0; transform:translateX(-28px); transition:opacity .7s ease, transform .7s ease; }
+.rl.on { opacity:1; transform:translateX(0); }
+.rr { opacity:0; transform:translateX(28px); transition:opacity .7s ease, transform .7s ease; }
+.rr.on { opacity:1; transform:translateX(0); }
+
+/* About */
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+.about-text p { color:var(--muted); font-weight:300; margin-bottom:1.2rem; font-size:1.05rem; }
+.about-text p strong { color:var(--text); font-weight:500; }
+.about-highlight {
+  background:var(--bg2); border-left:3px solid var(--orange);
+  padding:1.5rem 2rem; margin-top:2rem;
+  border-radius:0 4px 4px 0; position:relative; overflow:hidden;
+}
+.about-highlight::before {
+  content:'"'; position:absolute; top:-10px; left:10px;
+  font-family:'Bebas Neue',sans-serif; font-size:5rem;
+  color:rgba(255,107,0,0.06); line-height:1; pointer-events:none;
+}
+.about-highlight p { font-family:var(--mono); font-size:13px; color:var(--text); margin:0; font-style:italic; }
+.about-cards { display:flex; flex-direction:column; gap:.8rem; }
+.about-card {
+  background:var(--bg2); border:1px solid var(--border);
+  padding:1rem 1.5rem; border-radius:4px;
+  transition:border-color .2s, transform .2s;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.about-card:hover { border-color:var(--orange); transform:translateX(5px); }
+.about-card-label { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+.about-card-value { font-size:13px; color:var(--text); font-weight:500; text-align:right; }
+
+/* Skills */
+.skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.skill-group {
+  background:var(--bg2); border:1px solid var(--border);
+  padding:1.8rem; border-radius:4px;
+  transition:border-color .25s, transform .25s; position:relative; overflow:hidden;
+}
+.skill-group::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,107,0,0.04),transparent 60%);
+  opacity:0; transition:opacity .3s;
+}
+.skill-group:hover { border-color:var(--orange); transform:translateY(-3px); }
+.skill-group:hover::before { opacity:1; }
+.skill-group-title { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:2px; color:var(--orange); margin-bottom:1rem; }
+.skill-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.skill-tag {
+  padding:4px 10px; background:var(--bg3); border:1px solid var(--border);
+  border-radius:2px; font-family:var(--mono); font-size:11px;
+  color:var(--muted); letter-spacing:1px; transition:border-color .2s, color .2s;
+}
+.skill-tag:hover { border-color:var(--orange); color:var(--orange); }
+
+/* Project */
+.project-main {
+  display:grid; grid-template-columns:1.2fr 1fr; gap:0;
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:4px; overflow:hidden; transition:border-color .3s;
+}
+.project-main:hover { border-color:rgba(255,107,0,0.35); }
+.project-content { padding:3rem; }
+.project-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:4px 12px; background:rgba(255,107,0,0.12);
+  border:1px solid rgba(255,107,0,0.25); color:var(--orange);
+  font-family:var(--mono); font-size:11px; letter-spacing:2px;
+  text-transform:uppercase; border-radius:2px; margin-bottom:1.2rem;
+}
+.live-dot {
+  width:6px; height:6px; background:var(--orange);
+  border-radius:50%; animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(0.7); }
+}
+.project-name { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; letter-spacing:4px; color:var(--text); line-height:1; margin-bottom:1rem; }
+.project-desc { color:var(--muted); font-weight:300; margin-bottom:2rem; font-size:15px; }
+.project-features { list-style:none; margin-bottom:2rem; }
+.project-features li {
+  font-family:var(--mono); font-size:12px; color:var(--muted);
+  padding:7px 0; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:10px; transition:color .2s;
+}
+.project-features li:hover { color:var(--text); }
+.project-features li::before { content:''; width:4px; height:4px; background:var(--orange); border-radius:50%; flex-shrink:0; }
+.tech-stack { display:flex; gap:8px; flex-wrap:wrap; }
+.tech-pill {
+  padding:5px 12px; border:1px solid var(--border);
+  font-family:var(--mono); font-size:11px; color:var(--muted);
+  border-radius:2px; letter-spacing:1px; transition:border-color .2s, color .2s;
+}
+.tech-pill:hover { border-color:var(--orange); color:var(--orange); }
+.project-visual {
+  background:var(--bg3); display:flex; align-items:center;
+  justify-content:center; position:relative; overflow:hidden; min-height:420px;
+}
+.truck-lines { position:absolute; inset:0; overflow:hidden; opacity:0.06; }
+.truck-line {
+  position:absolute; height:1px; background:var(--orange);
+  animation:truckMove linear infinite;
+}
+@keyframes truckMove { from { transform:translateX(-100%); } to { transform:translateX(200%); } }
+.project-orb {
+  position:absolute; width:260px; height:260px; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,0,0.1),transparent 70%);
+  animation:orbBob 5s ease-in-out infinite;
+}
+.project-visual-inner { text-align:center; z-index:1; position:relative; }
+.project-logo-big {
+  font-family:'Bebas Neue',sans-serif; font-size:4.5rem;
+  color:var(--orange); letter-spacing:10px; display:block;
+  animation:logoGlow 3s ease-in-out infinite;
+}
+@keyframes logoGlow {
+  0%,100% { text-shadow:0 0 20px rgba(255,107,0,0.2); }
+  50% { text-shadow:0 0 40px rgba(255,107,0,0.55); }
+}
+.project-sub { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:4px; text-transform:uppercase; display:block; margin-top:8px; }
+
+/* Journey */
+.journey-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 4rem; }
+.journey-track { position:relative; padding-left:2rem; }
+.journey-track::before {
+  content:''; position:absolute; left:0; top:8px; bottom:8px; width:1px;
+  background:linear-gradient(to bottom,var(--orange),var(--border));
+}
+.journey-item { position:relative; margin-bottom:2.5rem; padding-left:2rem; transition:transform .2s; }
+.journey-item:hover { transform:translateX(4px); }
+.journey-item::before {
+  content:''; position:absolute; left:-2rem; top:8px;
+  width:9px; height:9px; background:var(--bg);
+  border:2px solid var(--border); border-radius:50%;
+  transform:translateX(-4px); transition:border-color .2s, background .2s;
+}
+.journey-item.done::before { background:var(--orange); border-color:var(--orange); box-shadow:0 0 10px rgba(255,107,0,0.4); }
+.journey-item:hover::before { border-color:var(--orange); }
+.journey-phase { font-family:var(--mono); font-size:11px; color:var(--orange); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+.journey-title { font-weight:500; font-size:16px; color:var(--text); margin-bottom:4px; }
+.journey-desc { font-size:14px; color:var(--muted); }
+
+/* Contact */
+.contact-wrap { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+.contact-text { font-size:1.05rem; color:var(--muted); font-weight:300; margin-bottom:2rem; }
+.contact-links { display:flex; flex-direction:column; gap:1rem; }
+.contact-link {
+  display:flex; align-items:center; gap:1rem;
+  padding:1rem 1.5rem; background:var(--bg2);
+  border:1px solid var(--border); border-radius:4px;
+  text-decoration:none; color:var(--text);
+  font-family:var(--mono); font-size:13px;
+  transition:border-color .2s, transform .2s, box-shadow .2s;
+}
+.contact-link:hover { border-color:var(--orange); transform:translateX(6px); box-shadow:-4px 0 0 var(--orange); }
+.contact-link-icon {
+  width:34px; height:34px; background:rgba(255,107,0,0.1);
+  border:1px solid rgba(255,107,0,0.2); border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:500; flex-shrink:0; color:var(--orange);
+}
+.contact-right { background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:2rem; }
+.contact-form-group { margin-bottom:1.2rem; }
+.contact-form-group label { display:block; font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+.contact-form-group input, .contact-form-group textarea {
+  width:100%; background:var(--bg3); border:1px solid var(--border);
+  border-radius:2px; padding:.75rem 1rem; color:var(--text);
+  font-family:var(--mono); font-size:13px; outline:none;
+  transition:border-color .2s, box-shadow .2s; resize:vertical;
+}
+.contact-form-group input:focus, .contact-form-group textarea:focus {
+  border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,107,0,0.08);
+}
+
+footer {
+  padding:2rem 4rem; border-top:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.footer-text { font-family:var(--mono); font-size:12px; color:var(--muted); }
+.footer-logo { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; color:var(--orange); letter-spacing:3px; }
+
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--orange); border-radius:2px; }
+
+@media(max-width:900px) {
+  nav { padding:1rem 1.5rem; }
+  section { padding:4rem 1.5rem; }
+  #hero { padding:0 1.5rem; }
+  .about-grid,.skills-grid,.contact-wrap,.journey-grid { grid-template-columns:1fr; }
+  .project-main { grid-template-columns:1fr; }
+  .project-visual { min-height:200px; }
+  .nav-links { display:none; }
+  footer { padding:1.5rem; flex-direction:column; gap:1rem; }
+  .hero-orb,.hero-ring { display:none; }
+  body { cursor:auto; }
+  .cursor,.cursor-ring { display:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
+
+<div id="loader">
+  <div class="loader-word">PRABH</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-num" id="lnum">0%</div>
+</div>
+
+<nav>
+  <a href="#hero" class="nav-logo">PRABH</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#journey">AI Journey</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="grid-line" style="left:33%"></div>
+  <div class="grid-line" style="left:66%"></div>
+  <div class="hero-orb"></div>
+  <div class="hero-ring"></div>
+
+  <p class="eyebrow">// SaaS Founder · AI Engineer · Builder</p>
+  <h1 class="hero-name">
+    <span class="name-line">PRABH</span>
+    <span class="name-line">BUILDS AI</span>
+  </h1>
+  <p class="hero-title">Building intelligent transport software — from live GPS dispatch to AI-powered invoicing and fleet management.</p>
+  <div class="hero-cta">
+    <a href="https://detours-app.vercel.app/" target="_blank" class="btn-primary">View Detours</a>
+    <a href="https://www.linkedin.com/in/prabhjot-mahal-b1ba9b28/" target="_blank" class="btn-outline">Get in touch</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-num"><span data-count="1">0</span></div><div class="stat-label">SaaS live</div></div>
+    <div><div class="stat-num"><span data-count="15">0</span>+</div><div class="stat-label">DB tables</div></div>
+    <div><div class="stat-num"><span data-count="10">0</span></div><div class="stat-label">AI lessons</div></div>
+    <div><div class="stat-num"><span data-count="3">0</span></div><div class="stat-label">ML models</div></div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">REACT <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">TYPESCRIPT <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">SUPABASE <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">PYTHON <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">PYTORCH <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">MACHINE LEARNING <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">GPS TRACKING <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">FASTAPI <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">AI ENGINEER <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">TRANSPORT SAAS <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">REACT <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">TYPESCRIPT <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">SUPABASE <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">PYTHON <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">PYTORCH <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">MACHINE LEARNING <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">GPS TRACKING <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">FASTAPI <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">AI ENGINEER <span class="marquee-dot">·</span></span>
+    <span class="marquee-item">TRANSPORT SAAS <span class="marquee-dot">·</span></span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="section-tag">// 01 — About</div>
+  <h2 class="section-title">WHO I AM</h2>
+  <div class="about-grid">
+    <div class="about-text rl">
+      <p>I'm a <strong>SaaS founder and emerging AI Engineer</strong> based in Ontario, Canada. I built Detours — a full-stack transport management platform — from scratch using React, TypeScript, and Supabase.</p>
+      <p>What started as a tool for 3 trucks is now a <strong>production-grade multi-tenant SaaS</strong> handling dispatch, live GPS tracking, POD submissions, driver settlements, fleet management and automated invoicing.</p>
+      <p>I'm now going deeper — learning Python, ML, deep learning, NLP, LLMs, RAG and agents. My goal is to build <strong>AI features directly into Detours</strong> and work as an AI Engineer.</p>
+      <div class="about-highlight">
+        <p>"I don't wait to understand something perfectly before building it. I build, break it, understand why, and build better."</p>
+      </div>
+    </div>
+    <div class="about-cards rr">
+      <div class="about-card"><div class="about-card-label">Location</div><div class="about-card-value">Ontario, Canada</div></div>
+      <div class="about-card"><div class="about-card-label">Focus</div><div class="about-card-value">Python · ML · AI Engineering</div></div>
+      <div class="about-card"><div class="about-card-label">Product</div><div class="about-card-value">Detours — Transport SaaS</div></div>
+      <div class="about-card"><div class="about-card-label">Stack</div><div class="about-card-value">React · TypeScript · Supabase · Python</div></div>
+      <div class="about-card"><div class="about-card-label">Deployed</div><div class="about-card-value">Vercel · Supabase Cloud</div></div>
+      <div class="about-card"><div class="about-card-label">Goal</div><div class="about-card-value">AI Engineer + Scale Detours to 25 companies</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-tag">// 02 — Skills</div>
+  <h2 class="section-title">WHAT I BUILD WITH</h2>
+  <div class="skills-grid reveal">
+    <div class="skill-group"><div class="skill-group-title">Frontend</div><div class="skill-tags"><span class="skill-tag">React</span><span class="skill-tag">TypeScript</span><span class="skill-tag">Next.js</span><span class="skill-tag">Tailwind</span><span class="skill-tag">Expo</span><span class="skill-tag">React Native</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">Backend & Data</div><div class="skill-tags"><span class="skill-tag">Supabase</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">FastAPI</span><span class="skill-tag">Python</span><span class="skill-tag">REST APIs</span><span class="skill-tag">Realtime</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">AI & ML</div><div class="skill-tags"><span class="skill-tag">NumPy</span><span class="skill-tag">Pandas</span><span class="skill-tag">scikit-learn</span><span class="skill-tag">PyTorch</span><span class="skill-tag">Matplotlib</span><span class="skill-tag">Claude API</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">DevOps & Tools</div><div class="skill-tags"><span class="skill-tag">Vercel</span><span class="skill-tag">GitHub</span><span class="skill-tag">Cursor AI</span><span class="skill-tag">EAS Build</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">Domain Knowledge</div><div class="skill-tags"><span class="skill-tag">Transport SaaS</span><span class="skill-tag">Fleet Mgmt</span><span class="skill-tag">Dispatch Logic</span><span class="skill-tag">GPS Tracking</span><span class="skill-tag">Multi-tenant</span></div></div>
+    <div class="skill-group"><div class="skill-group-title">Learning Now</div><div class="skill-tags"><span class="skill-tag">Deep Learning</span><span class="skill-tag">NLP</span><span class="skill-tag">LLMs</span><span class="skill-tag">RAG</span><span class="skill-tag">AI Agents</span><span class="skill-tag">LangChain</span></div></div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-tag">// 03 — Projects</div>
+  <h2 class="section-title">WHAT I'VE BUILT</h2>
+  <div class="project-main reveal">
+    <div class="project-content">
+      <div class="project-badge"><div class="live-dot"></div> Live in production</div>
+      <div class="project-name">DETOURS</div>
+      <p class="project-desc">A full multi-tenant transport SaaS for Canadian owner-operators. Handles dispatch, GPS tracking, POD submissions, driver settlements, fleet compliance and invoicing.</p>
+      <ul class="project-features">
+        <li>Multi-tenant — each company fully isolated</li>
+        <li>Live GPS tracking with Supabase Realtime</li>
+        <li>POD ticket submission with photo capture</li>
+        <li>Driver dispatch with real-time status updates</li>
+        <li>Automated invoice grouping by customer</li>
+        <li>Fleet alerts — insurance, safety, service due</li>
+        <li>Driver settlements — hourly, per load, per tonne</li>
+        <li>Vehicle inspection reports</li>
+      </ul>
+      <div class="tech-stack">
+        <span class="tech-pill">React</span><span class="tech-pill">TypeScript</span>
+        <span class="tech-pill">Supabase</span><span class="tech-pill">PostgreSQL</span>
+        <span class="tech-pill">Vercel</span><span class="tech-pill">Python</span>
+      </div>
+    </div>
+    <div class="project-visual">
+      <div class="truck-lines" id="tLines"></div>
+      <div class="project-orb"></div>
+      <div class="project-visual-inner">
+        <span class="project-logo-big">DETOURS</span>
+        <span class="project-sub">Driver &amp; Dispatch Platform</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="section-tag">// 04 — AI Journey</div>
+  <h2 class="section-title">LEARNING PATH</h2>
+  <div class="journey-grid">
+    <div class="journey-track rl">
+      <div class="journey-item done"><div class="journey-phase">Phase 1 — Complete</div><div class="journey-title">Python + Math Foundations</div><div class="journey-desc">NumPy, Pandas, Matplotlib, Linear Algebra, Calculus, Statistics</div></div>
+      <div class="journey-item done"><div class="journey-phase">Phase 1 — Complete</div><div class="journey-title">Machine Learning</div><div class="journey-desc">Linear regression, multi-feature models, classification — 98% accuracy on delivery prediction</div></div>
+      <div class="journey-item done"><div class="journey-phase">Phase 1 — Complete</div><div class="journey-title">Neural Networks</div><div class="journey-desc">3-layer neural network with PyTorch trained on Detours delivery data</div></div>
+    </div>
+    <div class="journey-track rr">
+      <div class="journey-item"><div class="journey-phase">Phase 2 — In Progress</div><div class="journey-title">NLP + LLMs</div><div class="journey-desc">Tokenisation, embeddings, transformers, Claude API, fine-tuning</div></div>
+      <div class="journey-item"><div class="journey-phase">Phase 3 — Upcoming</div><div class="journey-title">RAG + AI Agents</div><div class="journey-desc">Vector databases, LangChain, tool use, autonomous agents for Detours</div></div>
+      <div class="journey-item"><div class="journey-phase">Goal</div><div class="journey-title">AI Features in Detours</div><div class="journey-desc">Smart dispatch, auto-invoicing, late delivery prediction, fleet maintenance AI</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-tag">// 05 — Contact</div>
+  <h2 class="section-title">LET'S TALK</h2>
+  <div class="contact-wrap reveal">
+    <div>
+      <p class="contact-text">Whether you're a transport company looking for a smarter dispatch platform, or a team looking for an AI Engineer — I'd love to connect.</p>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/prabhjot-mahal-b1ba9b28/" target="_blank" class="contact-link"><div class="contact-link-icon">in</div>LinkedIn — Prabhjot Mahal</a>
+        <a href="https://github.com/Prabh101726" target="_blank" class="contact-link"><div class="contact-link-icon">gh</div>GitHub — Prabh101726</a>
+        <a href="https://detours-app.vercel.app/" target="_blank" class="contact-link"><div class="contact-link-icon">D</div>Detours — Live App</a>
+      </div>
+    </div>
+    <div class="contact-right">
+      <div class="contact-form-group"><label>Your name</label><input type="text" placeholder="Company or your name"></div>
+      <div class="contact-form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+      <div class="contact-form-group"><label>Message</label><textarea rows="4" placeholder="What are you working on?"></textarea></div>
+      <button class="btn-primary" id="sendBtn" style="width:100%;border:none;cursor:none;font-size:13px">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-text">© 2026 Prabh — SaaS Founder &amp; AI Engineer</span>
+  <span class="footer-logo">PRABH</span>
+</footer>
+
+<script>
+// Loader
+const loader = document.getElementById('loader');
+const lnum = document.getElementById('lnum');
+let n = 0;
+const li = setInterval(() => {
+  n += Math.floor(Math.random() * 14) + 4;
+  if (n >= 100) { n = 100; clearInterval(li); }
+  lnum.textContent = n + '%';
+  if (n === 100) setTimeout(() => loader.classList.add('gone'), 280);
+}, 75);
+
+// Cursor
+const cur = document.getElementById('cur');
+const curR = document.getElementById('curR');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  curR.style.left = e.clientX + 'px';
+  curR.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => curR.classList.add('big'));
+  el.addEventListener('mouseleave', () => curR.classList.remove('big'));
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal,.rl,.rr').forEach(el => obs.observe(el));
+
+// Counter
+const cobs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const target = parseInt(e.target.dataset.count);
+    let cur = 0;
+    const step = Math.ceil(target / 18);
+    const t = setInterval(() => {
+      cur += step;
+      if (cur >= target) { cur = target; clearInterval(t); }
+      e.target.textContent = cur;
+    }, 55);
+    cobs.unobserve(e.target);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => cobs.observe(el));
+
+// Truck lines
+const tl = document.getElementById('tLines');
+for (let i = 0; i < 9; i++) {
+  const l = document.createElement('div');
+  l.className = 'truck-line';
+  const w = 35 + Math.random() * 55;
+  const d = 2.5 + Math.random() * 4;
+  const delay = Math.random() * 6;
+  l.style.cssText = `top:${8 + i * 10}%;width:${w}%;animation-duration:${d}s;animation-delay:${delay}s`;
+  tl.appendChild(l);
+}
+
+// Send
+document.getElementById('sendBtn').addEventListener('click', function() {
+  this.textContent = 'Message sent!';
+  this.style.background = '#1a5c2a';
+  setTimeout(() => { this.textContent = 'Send Message'; this.style.background = ''; }, 3000);
+});
+
+// Nav highlight on scroll
+const secs = document.querySelectorAll('section[id]');
+const nls = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let active = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) active = s.id; });
+  nls.forEach(a => { a.style.color = a.getAttribute('href') === '#' + active ? 'var(--orange)' : ''; });
+});
+</script>
+</body>
+</html>
