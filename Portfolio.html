@@ -360,6 +360,11 @@ section { padding:6rem 4rem; border-top:1px solid var(--border); }
   border-radius:2px; letter-spacing:1px; transition:border-color .2s, color .2s;
 }
 .tech-pill:hover { border-color:var(--orange); color:var(--orange); }
+.project-cta { margin-top:1.75rem; display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; }
+.project-cta-hint {
+  font-family:var(--mono); font-size:11px; color:var(--muted);
+  letter-spacing:1px;
+}
 .project-visual {
   background:var(--bg3); display:flex; align-items:center;
   justify-content:center; position:relative; overflow:hidden; min-height:420px;
@@ -386,6 +391,13 @@ section { padding:6rem 4rem; border-top:1px solid var(--border); }
   50% { text-shadow:0 0 40px rgba(255,107,0,0.55); }
 }
 .project-sub { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:4px; text-transform:uppercase; display:block; margin-top:8px; }
+.project-visual-app {
+  display:inline-block; margin-top:1.1rem;
+  font-family:var(--mono); font-size:11px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--orange); text-decoration:none;
+  border-bottom:1px solid transparent; transition:color .2s, border-color .2s;
+}
+.project-visual-app:hover { color:var(--text); border-bottom-color:var(--orange); }
 
 /* Detours — driver vs owner mock screens */
 .detours-showcase {
@@ -900,6 +912,10 @@ footer {
         <span class="tech-pill">Supabase</span><span class="tech-pill">PostgreSQL</span>
         <span class="tech-pill">Vercel</span><span class="tech-pill">Python</span>
       </div>
+      <div class="project-cta">
+        <a href="https://detours-app.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-primary">Visit live app</a>
+        <span class="project-cta-hint">detours-app.vercel.app</span>
+      </div>
     </div>
     <div class="project-visual">
       <div class="truck-lines" id="tLines"></div>
@@ -907,6 +923,7 @@ footer {
       <div class="project-visual-inner">
         <span class="project-logo-big">DETOURS</span>
         <span class="project-sub">Driver &amp; Dispatch Platform</span>
+        <a href="https://detours-app.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-visual-app">Visit app →</a>
       </div>
     </div>
   </div>
