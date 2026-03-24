@@ -8,154 +8,145 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --orange: #FF6B00;
-  --bg: #0a0a0a;
-  --border: rgba(255,107,0,0.2);
-  --text: #e8e6e0;
-  --muted: #9a9890;
+  --accent: #c44f00;
+  --bg: #ffffff;
+  --border: #ccc;
+  --text: #0a0a0a;
+  --muted: #333333;
   --mono: 'JetBrains Mono', monospace;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { background:var(--bg); }
 body {
   font-family:'DM Sans',Arial,Helvetica,sans-serif;
-  font-size:11pt;
-  line-height:1.5;
+  font-size:12.5pt;
+  line-height:1.55;
   color:var(--text);
   background:var(--bg);
-  max-width:800px;
+  max-width:820px;
   margin:0 auto;
-  padding:2rem 1.5rem 2.5rem;
+  padding:2.25rem 1.75rem 2.75rem;
 }
-a { color:var(--orange); text-decoration:none; }
+a { color:var(--accent); text-decoration:none; }
 a:hover { text-decoration:underline; }
 
 .back {
   font-family:var(--mono);
-  font-size:10px;
+  font-size:11px;
   letter-spacing:1px;
   text-transform:uppercase;
-  margin-bottom:1.25rem;
+  margin-bottom:1.35rem;
 }
-.back a { color:var(--muted); }
-.back a:hover { color:var(--orange); }
+.back a { color:var(--text); font-weight:500; }
+.back a:hover { color:var(--accent); }
 
 header {
   border-bottom:1px solid var(--border);
-  padding-bottom:1.1rem;
-  margin-bottom:1.25rem;
+  padding-bottom:1.15rem;
+  margin-bottom:1.35rem;
 }
 h1 {
   font-family:'Bebas Neue',Arial,sans-serif;
-  font-size:2.5rem;
+  font-size:2.85rem;
   letter-spacing:3px;
   line-height:1;
-  color:var(--orange);
-  margin-bottom:0.25rem;
+  color:var(--text);
+  margin-bottom:0.3rem;
 }
 .tagline {
-  font-size:0.92rem;
+  font-size:1.05rem;
   font-weight:600;
   color:var(--text);
-  margin-bottom:0.85rem;
+  margin-bottom:0.9rem;
 }
 .contact {
   font-family:var(--mono);
-  font-size:9.5pt;
+  font-size:10.5pt;
   color:var(--muted);
-  line-height:1.65;
+  line-height:1.7;
 }
-.contact a { color:var(--text); word-break:break-all; }
-.contact a:hover { color:var(--orange); }
+.contact a { color:var(--text); word-break:break-all; font-weight:500; }
+.contact a:hover { color:var(--accent); }
 
-main section { margin-bottom:1.2rem; }
+main section { margin-bottom:1.35rem; }
 h2 {
   font-family:'Bebas Neue',Arial,sans-serif;
-  font-size:1.05rem;
+  font-size:1.2rem;
   letter-spacing:2px;
-  color:var(--orange);
+  color:var(--text);
   text-transform:uppercase;
-  margin-bottom:0.5rem;
-  padding-bottom:0.2rem;
-  border-bottom:1px solid var(--border);
+  margin-bottom:0.55rem;
+  padding-bottom:0.25rem;
+  border-bottom:2px solid var(--accent);
 }
 .summary {
   color:var(--muted);
-  font-weight:300;
+  font-weight:400;
   text-align:left;
+  font-size:12.5pt;
 }
 
-/* ATS-friendly skill blocks: plain paragraphs + lists (no tables) */
-.skill-block { margin-bottom:0.65rem; }
+.skill-block { margin-bottom:0.75rem; }
 .skill-block:last-child { margin-bottom:0; }
 .skill-label {
   font-weight:600;
   color:var(--text);
-  font-size:10pt;
+  font-size:11pt;
   display:block;
-  margin-bottom:0.2rem;
+  margin-bottom:0.25rem;
 }
 .skill-text {
   color:var(--muted);
-  font-weight:300;
-  font-size:10pt;
+  font-weight:400;
+  font-size:11.5pt;
 }
 
-.job, .project-block { margin-bottom:1.05rem; }
+.job, .project-block { margin-bottom:1.15rem; }
 .job:last-child, .project-block:last-child { margin-bottom:0; }
 .job-title {
   font-weight:600;
-  font-size:11pt;
+  font-size:12.5pt;
   color:var(--text);
 }
 .job-line {
   font-family:var(--mono);
-  font-size:9.5pt;
+  font-size:10.5pt;
   color:var(--muted);
-  margin:0.15rem 0 0.35rem;
+  margin:0.2rem 0 0.4rem;
 }
 .job ul, .project-block ul {
-  margin:0.35rem 0 0 1.15rem;
+  margin:0.4rem 0 0 1.2rem;
   color:var(--muted);
-  font-weight:300;
-  font-size:10pt;
+  font-weight:400;
+  font-size:11.5pt;
 }
-.job li, .project-block li { margin-bottom:0.3rem; }
+.job li, .project-block li { margin-bottom:0.35rem; }
 
-.edu-block { margin-bottom:0.75rem; }
+.edu-block { margin-bottom:0.85rem; }
 .edu-block:last-child { margin-bottom:0; }
-.edu-title { font-weight:600; color:var(--text); }
-.edu-meta { font-size:10pt; color:var(--muted); margin-top:0.15rem; }
+.edu-title { font-weight:600; color:var(--text); font-size:12pt; }
+.edu-meta { font-size:11.5pt; color:var(--muted); margin-top:0.2rem; }
 
 .add-list {
-  margin:0.35rem 0 0 1.15rem;
+  margin:0.4rem 0 0 1.2rem;
   color:var(--muted);
-  font-weight:300;
-  font-size:10pt;
+  font-weight:400;
+  font-size:11.5pt;
 }
-.add-list li { margin-bottom:0.35rem; }
+.add-list li { margin-bottom:0.4rem; }
 
 @media print {
   .back { display:none; }
   body {
     padding:1cm 1.2cm;
     max-width:none;
-    font-family:Calibri,Arial,Helvetica,sans-serif;
-    font-size:11pt;
-    background:#fff;
-    color:#1a1a1a;
+    font-size:12pt;
   }
-  html { background:#fff; }
-  a { color:#000; text-decoration:none; }
-  h1, h2 { color:#b84700; }
-  .tagline, .job-title, .edu-title, .skill-label { color:#111; }
-  .summary, .skill-text, .job-line, .job ul, .project-block ul, .edu-meta, .add-list { color:#333; }
-  .contact, .contact a { color:#222; }
 }
 </style>
 </head>
 <body>
-<p class="back"><a href="/">← Portfolio</a></p>
+<p class="back"><a href="https://prabh-portfolio-detours.vercel.app/">← Portfolio</a></p>
 
 <header>
   <h1>PRABHJOT SINGH</h1>
@@ -267,10 +258,6 @@ h2 {
     <div class="edu-block">
       <p class="edu-title">Diploma in Applied Computing</p>
       <p class="edu-meta">Bay of Plenty, New Zealand</p>
-    </div>
-    <div class="edu-block">
-      <p class="edu-title">College Diploma — Information Technology</p>
-      <p class="edu-meta">Ontario, Canada</p>
     </div>
     <div class="edu-block">
       <p class="edu-title">Self-Directed AI Engineering Curriculum — In Progress</p>
