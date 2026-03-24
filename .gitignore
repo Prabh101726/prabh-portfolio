@@ -4,3 +4,6 @@
 .env.local
 .env*.local
 node_modules/
+
+# Local resume PDF (not tracked — use resume.html for version control)
+Prabhjot_Singh_Resume.pdf
