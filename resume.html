@@ -4,128 +4,153 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prabhjot Singh — Resume</title>
+<meta name="description" content="Resume: SaaS Founder, AI Engineer, Full Stack Developer — Detours transport SaaS, Python, React, TypeScript, Supabase.">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --orange: #FF6B00;
   --bg: #0a0a0a;
-  --bg2: #111111;
   --border: rgba(255,107,0,0.2);
   --text: #e8e6e0;
-  --muted: #8a8880;
+  --muted: #9a9890;
   --mono: 'JetBrains Mono', monospace;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { background:var(--bg); }
 body {
-  font-family:'DM Sans',sans-serif;
-  font-size:11.5pt;
-  line-height:1.55;
+  font-family:'DM Sans',Arial,Helvetica,sans-serif;
+  font-size:11pt;
+  line-height:1.5;
   color:var(--text);
   background:var(--bg);
-  max-width:820px;
+  max-width:800px;
   margin:0 auto;
-  padding:2.5rem 1.75rem 3rem;
+  padding:2rem 1.5rem 2.5rem;
 }
 a { color:var(--orange); text-decoration:none; }
 a:hover { text-decoration:underline; }
-
-header {
-  border-bottom:1px solid var(--border);
-  padding-bottom:1.35rem;
-  margin-bottom:1.5rem;
-}
-h1 {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:2.75rem;
-  letter-spacing:4px;
-  line-height:1;
-  color:var(--orange);
-  margin-bottom:0.35rem;
-}
-.tagline {
-  font-size:0.95rem;
-  font-weight:500;
-  color:var(--text);
-  margin-bottom:1rem;
-}
-.contact {
-  display:flex;
-  flex-direction:column;
-  gap:0.35rem;
-  font-family:var(--mono);
-  font-size:10pt;
-  color:var(--muted);
-}
-.contact a {
-  color:var(--text);
-  word-break:break-all;
-  display:inline-block;
-  max-width:100%;
-}
-.contact a:hover { color:var(--orange); }
-
-section { margin-bottom:1.35rem; }
-h2 {
-  font-family:'Bebas Neue',sans-serif;
-  font-size:1.15rem;
-  letter-spacing:3px;
-  color:var(--orange);
-  margin-bottom:0.65rem;
-  padding-bottom:0.25rem;
-  border-bottom:1px solid var(--border);
-}
-.item { margin-bottom:1rem; }
-.item:last-child { margin-bottom:0; }
-.item-head {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:baseline;
-  gap:0.5rem 1rem;
-  margin-bottom:0.25rem;
-}
-.item-title { font-weight:600; color:var(--text); }
-.item-meta { font-family:var(--mono); font-size:9.5pt; color:var(--muted); }
-.item ul {
-  margin:0.4rem 0 0 1.1rem;
-  color:var(--muted);
-  font-weight:300;
-}
-.item li { margin-bottom:0.25rem; }
-.skills {
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.4rem;
-}
-.skill {
-  font-family:var(--mono);
-  font-size:9pt;
-  padding:0.25rem 0.5rem;
-  border:1px solid var(--border);
-  border-radius:2px;
-  color:var(--muted);
-}
 
 .back {
   font-family:var(--mono);
   font-size:10px;
   letter-spacing:1px;
   text-transform:uppercase;
-  margin-bottom:1.5rem;
-  display:inline-block;
+  margin-bottom:1.25rem;
 }
 .back a { color:var(--muted); }
 .back a:hover { color:var(--orange); }
 
+header {
+  border-bottom:1px solid var(--border);
+  padding-bottom:1.1rem;
+  margin-bottom:1.25rem;
+}
+h1 {
+  font-family:'Bebas Neue',Arial,sans-serif;
+  font-size:2.5rem;
+  letter-spacing:3px;
+  line-height:1;
+  color:var(--orange);
+  margin-bottom:0.25rem;
+}
+.tagline {
+  font-size:0.92rem;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:0.85rem;
+}
+.contact {
+  font-family:var(--mono);
+  font-size:9.5pt;
+  color:var(--muted);
+  line-height:1.65;
+}
+.contact a { color:var(--text); word-break:break-all; }
+.contact a:hover { color:var(--orange); }
+
+main section { margin-bottom:1.2rem; }
+h2 {
+  font-family:'Bebas Neue',Arial,sans-serif;
+  font-size:1.05rem;
+  letter-spacing:2px;
+  color:var(--orange);
+  text-transform:uppercase;
+  margin-bottom:0.5rem;
+  padding-bottom:0.2rem;
+  border-bottom:1px solid var(--border);
+}
+.summary {
+  color:var(--muted);
+  font-weight:300;
+  text-align:left;
+}
+
+/* ATS-friendly skill blocks: plain paragraphs + lists (no tables) */
+.skill-block { margin-bottom:0.65rem; }
+.skill-block:last-child { margin-bottom:0; }
+.skill-label {
+  font-weight:600;
+  color:var(--text);
+  font-size:10pt;
+  display:block;
+  margin-bottom:0.2rem;
+}
+.skill-text {
+  color:var(--muted);
+  font-weight:300;
+  font-size:10pt;
+}
+
+.job, .project-block { margin-bottom:1.05rem; }
+.job:last-child, .project-block:last-child { margin-bottom:0; }
+.job-title {
+  font-weight:600;
+  font-size:11pt;
+  color:var(--text);
+}
+.job-line {
+  font-family:var(--mono);
+  font-size:9.5pt;
+  color:var(--muted);
+  margin:0.15rem 0 0.35rem;
+}
+.job ul, .project-block ul {
+  margin:0.35rem 0 0 1.15rem;
+  color:var(--muted);
+  font-weight:300;
+  font-size:10pt;
+}
+.job li, .project-block li { margin-bottom:0.3rem; }
+
+.edu-block { margin-bottom:0.75rem; }
+.edu-block:last-child { margin-bottom:0; }
+.edu-title { font-weight:600; color:var(--text); }
+.edu-meta { font-size:10pt; color:var(--muted); margin-top:0.15rem; }
+
+.add-list {
+  margin:0.35rem 0 0 1.15rem;
+  color:var(--muted);
+  font-weight:300;
+  font-size:10pt;
+}
+.add-list li { margin-bottom:0.35rem; }
+
 @media print {
-  body { padding:1.2cm; max-width:none; }
   .back { display:none; }
-  a { color:#000; }
-  body, html { background:#fff; color:#111; }
-  h1, h2 { color:#c44f00; }
-  .contact a { color:#222; }
-  .item-meta, .item ul, .skill { color:#444; }
+  body {
+    padding:1cm 1.2cm;
+    max-width:none;
+    font-family:Calibri,Arial,Helvetica,sans-serif;
+    font-size:11pt;
+    background:#fff;
+    color:#1a1a1a;
+  }
+  html { background:#fff; }
+  a { color:#000; text-decoration:none; }
+  h1, h2 { color:#b84700; }
+  .tagline, .job-title, .edu-title, .skill-label { color:#111; }
+  .summary, .skill-text, .job-line, .job ul, .project-block ul, .edu-meta, .add-list { color:#333; }
+  .contact, .contact a { color:#222; }
 }
 </style>
 </head>
@@ -134,92 +159,129 @@ h2 {
 
 <header>
   <h1>PRABHJOT SINGH</h1>
-  <p class="tagline">SaaS founder · AI engineer · Full-stack builder</p>
+  <p class="tagline">SaaS Founder | Emerging AI Engineer | Full Stack Developer</p>
   <div class="contact">
-    <a href="mailto:prabhmahal@live.in">prabhmahal@live.in</a>
-    <a href="https://www.linkedin.com/in/prabhjot-mahal-b1ba9b28/" target="_blank" rel="noopener noreferrer">linkedin.com/in/prabhjot-mahal-b1ba9b28</a>
-    <a href="https://github.com/Prabh101726" target="_blank" rel="noopener noreferrer">github.com/Prabh101726</a>
-    <span>Ontario, Canada</span>
+    <div><a href="mailto:prabhmahal@live.in">prabhmahal@live.in</a></div>
+    <div><a href="https://www.linkedin.com/in/prabhjot-mahal-b1ba9b28/" target="_blank" rel="noopener noreferrer">linkedin.com/in/prabhjot-mahal-b1ba9b28</a></div>
+    <div><a href="https://github.com/Prabh101726" target="_blank" rel="noopener noreferrer">github.com/Prabh101726</a></div>
+    <div>GTA, Ontario, Canada</div>
   </div>
 </header>
 
-<section>
-  <h2>Summary</h2>
-  <p style="color:var(--muted);font-weight:300;">
-    Built and shipped <strong style="color:var(--text);font-weight:500">Detours</strong>, a multi-tenant transport SaaS for Canadian companies (React, TypeScript, Supabase). Growing into AI/ML with Python, PyTorch, and LLM tooling. Prior enterprise IT support experience.
-  </p>
-</section>
+<main>
+  <section aria-labelledby="sec-summary">
+    <h2 id="sec-summary">Professional Summary</h2>
+    <p class="summary">
+      SaaS Founder and emerging AI Engineer with hands-on experience building production-grade software from the ground up. Independently designed and deployed Detours — a full multi-tenant transport management platform handling live GPS tracking, automated dispatch, POD submissions, fleet management and invoicing for Canadian trucking companies. Background in IT support combined with active self-directed study in Python, Machine Learning, Deep Learning, NLP and LLMs. Passionate about applying AI to solve real-world operational problems.
+    </p>
+  </section>
 
-<section>
-  <h2>Experience</h2>
-
-  <div class="item">
-    <div class="item-head">
-      <span class="item-title">Founder &amp; Lead Engineer — Detours</span>
-      <span class="item-meta">Present</span>
+  <section aria-labelledby="sec-skills">
+    <h2 id="sec-skills">Technical Skills</h2>
+    <div class="skill-block">
+      <span class="skill-label">Programming and Full Stack</span>
+      <p class="skill-text">Python, JavaScript, TypeScript, SQL, React, Next.js, Node.js, HTML, CSS, Tailwind</p>
     </div>
-    <p class="item-meta" style="margin-bottom:0.35rem;">Transport SaaS · React · TypeScript · Supabase · Vercel</p>
-    <ul>
-      <li>End-to-end product: dispatch, live GPS, POD, settlements, fleet compliance, invoicing.</li>
-      <li>Multi-tenant architecture; production deployment and ongoing iteration.</li>
+    <div class="skill-block">
+      <span class="skill-label">AI, ML and Deep Learning</span>
+      <p class="skill-text">PyTorch, NumPy, Pandas, scikit-learn, Matplotlib, Neural Networks, Linear Regression, Classification</p>
+    </div>
+    <div class="skill-block">
+      <span class="skill-label">Generative AI and LLMs</span>
+      <p class="skill-text">Claude API, Prompt Engineering, LLM integration, NLP fundamentals, Embeddings (in progress)</p>
+    </div>
+    <div class="skill-block">
+      <span class="skill-label">Agentic and GenAI Frameworks</span>
+      <p class="skill-text">LangChain (learning), RAG pipelines, Vector databases, Semantic search (in progress)</p>
+    </div>
+    <div class="skill-block">
+      <span class="skill-label">Backend and Databases</span>
+      <p class="skill-text">FastAPI, Supabase, PostgreSQL, REST APIs, Realtime WebSockets, Multi-tenant architecture</p>
+    </div>
+    <div class="skill-block">
+      <span class="skill-label">DevOps and Deployment</span>
+      <p class="skill-text">Vercel, GitHub, Git, EAS Build, Expo, React Native, CI/CD workflows</p>
+    </div>
+    <div class="skill-block">
+      <span class="skill-label">Domain Expertise</span>
+      <p class="skill-text">Transport SaaS, Fleet Management, GPS Tracking, Dispatch Systems, Driver Settlements, Invoicing</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="sec-exp">
+    <h2 id="sec-exp">Work Experience</h2>
+
+    <article class="job">
+      <h3 class="job-title">IT Help Desk Technician</h3>
+      <p class="job-line">GTA, Ontario | 2 Years</p>
+      <ul>
+        <li>Provided Tier 1 and Tier 2 technical support for hardware, software, networking and user account issues.</li>
+        <li>Diagnosed and resolved system failures, connectivity problems and application errors under SLA requirements.</li>
+        <li>Managed user onboarding, device configuration and access provisioning on Windows and macOS.</li>
+        <li>Documented recurring issues and contributed to internal knowledge base, reducing repeat ticket volume.</li>
+        <li>Developed problem-solving and communication skills across technical and non-technical stakeholders.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section aria-labelledby="sec-projects">
+    <h2 id="sec-projects">Projects</h2>
+
+    <article class="project-block">
+      <h3 class="job-title">Detours — Transport SaaS Platform</h3>
+      <p class="job-line">https://detours-app.vercel.app</p>
+      <p class="job-line">Founder and Full Stack Developer | 2024 – Present | React, TypeScript, Supabase, PostgreSQL, Python, Vercel</p>
+      <ul>
+        <li>Independently architected and deployed a production multi-tenant SaaS serving trucking companies across Ontario.</li>
+        <li>Built live GPS tracking system using Supabase Realtime with sub-5-second driver location updates for dispatcher maps.</li>
+        <li>Designed and implemented 15+ database tables handling dispatch jobs, POD tickets, driver profiles, fleet records, invoices and settlements.</li>
+        <li>Developed automated invoice generation grouping POD tickets by customer with tax calculations.</li>
+        <li>Built fleet maintenance alert system tracking insurance expiry, safety certificates and service intervals.</li>
+        <li>Implemented driver settlement calculations supporting hourly, per-load and per-tonne pay structures.</li>
+        <li>Integrated vehicle inspection reporting, fuel expense tracking and GPS location history.</li>
+      </ul>
+    </article>
+
+    <article class="project-block">
+      <h3 class="job-title">AI Learning Projects</h3>
+      <p class="job-line">https://github.com/Prabh101726</p>
+      <p class="job-line">Self-Directed AI Engineering Study | 2025 – Present | Python, PyTorch, scikit-learn, NumPy, Pandas</p>
+      <ul>
+        <li>Built linear regression and multi-feature ML models predicting delivery times with 98.3% R-squared accuracy.</li>
+        <li>Developed logistic classification achieving 100% accuracy on late delivery prediction from distance, stops and traffic data.</li>
+        <li>Constructed 3-layer neural network in PyTorch on transport dataset with loss converging to 0.66 over 1000 epochs.</li>
+        <li>Implemented data pipeline scripts simulating Supabase API responses for fleet analytics and invoice automation.</li>
+        <li>Applied NumPy, Pandas and Matplotlib for EDA on driver performance and fuel cost datasets.</li>
+      </ul>
+    </article>
+
+    <article class="project-block">
+      <h3 class="job-title">Portfolio Website</h3>
+      <p class="job-line">https://prabh-portfolio.vercel.app</p>
+      <p class="job-line">Live portfolio showcasing Detours and AI learning journey; contact form and project narrative.</p>
+    </article>
+  </section>
+
+  <section aria-labelledby="sec-edu">
+    <h2 id="sec-edu">Education</h2>
+    <div class="edu-block">
+      <p class="edu-title">College Diploma — Information Technology</p>
+      <p class="edu-meta">Ontario, Canada</p>
+    </div>
+    <div class="edu-block">
+      <p class="edu-title">Self-Directed AI Engineering Curriculum — In Progress</p>
+      <p class="edu-meta">Python, Statistics, Machine Learning, Deep Learning (PyTorch), NLP, LLMs, RAG, AI Agents — actively building projects applied to Detours transport platform.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="sec-additional">
+    <h2 id="sec-additional">Additional Information</h2>
+    <ul class="add-list">
+      <li>Open to full-time AI Engineer, ML Engineer, Full Stack Developer and SaaS roles across GTA and remote.</li>
+      <li>Available for immediate start.</li>
     </ul>
-  </div>
-
-  <div class="item">
-    <div class="item-head">
-      <span class="item-title">ICT Help Desk — Vodafone</span>
-      <span class="item-meta">2 years</span>
-    </div>
-    <p class="item-meta" style="margin-bottom:0.35rem;">Enterprise support · ticketing · customer-facing technical resolution</p>
-    <ul>
-      <li>Resolved hardware, software, and connectivity issues for internal or retail ICT operations.</li>
-      <li>Documented incidents, escalated where appropriate, and improved first-contact resolution.</li>
-    </ul>
-  </div>
-</section>
-
-<section>
-  <h2>Education</h2>
-  <div class="item">
-    <div class="item-head">
-      <span class="item-title">Diploma in Applied Computing</span>
-    </div>
-    <p class="item-meta">Bay of Plenty, New Zealand</p>
-  </div>
-</section>
-
-<section>
-  <h2>Skills</h2>
-  <div class="skills">
-    <span class="skill">React</span>
-    <span class="skill">TypeScript</span>
-    <span class="skill">Supabase</span>
-    <span class="skill">PostgreSQL</span>
-    <span class="skill">Python</span>
-    <span class="skill">FastAPI</span>
-    <span class="skill">Vercel</span>
-    <span class="skill">Git</span>
-    <span class="skill">ML / PyTorch</span>
-  </div>
-</section>
-
-<section>
-  <h2>Selected projects</h2>
-  <div class="item">
-    <div class="item-head">
-      <span class="item-title">Detours</span>
-      <span class="item-meta"><a href="https://detours-app.vercel.app/" target="_blank" rel="noopener noreferrer">detours-app.vercel.app</a></span>
-    </div>
-    <p class="item-meta">Live transport management platform for Canadian transport companies.</p>
-  </div>
-  <div class="item">
-    <div class="item-head">
-      <span class="item-title">Portfolio</span>
-      <span class="item-meta"><a href="/">This site</a></span>
-    </div>
-    <p class="item-meta">Dark-themed marketing site with contact form and project showcase.</p>
-  </div>
-</section>
+  </section>
+</main>
 
 </body>
 </html>
