@@ -1183,6 +1183,9 @@ window.addEventListener('scroll', () => {
   secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) active = s.id; });
   nls.forEach(a => { a.style.color = a.getAttribute('href') === '#' + active ? 'var(--orange)' : ''; });
 });
+
+// Visit counter — POST /api/visit (optional Supabase; see api/visit.js). No PII sent.
+fetch('/api/visit', { method: 'POST', keepalive: true }).catch(function() {});
 </script>
 </body>
 </html>
