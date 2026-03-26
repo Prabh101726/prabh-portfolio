@@ -17,7 +17,8 @@ jobs:
           args: >-
             --verbose
             --no-progress
-            --accept 200,206,429
+            --root-dir .
+            --accept 200,206,429,999
             --retry-wait-time 2
             --max-retries 2
             Portfolio.html resume.html
