@@ -3,5 +3,8 @@
   "private": true,
   "dependencies": {
     "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "uipro-cli": "^2.2.3"
   }
 }
