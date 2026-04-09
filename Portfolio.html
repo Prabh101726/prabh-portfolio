@@ -804,6 +804,41 @@ section { padding:6rem 4rem; border-top:1px solid var(--border); }
   overflow:hidden; opacity:0; pointer-events:none;
 }
 
+/* Background music (YouTube — audio-first; hidden player) */
+.yt-audio-host {
+  position:fixed; width:4px; height:3px; left:0; bottom:0;
+  overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%);
+  opacity:0; pointer-events:none; z-index:1;
+}
+.bg-music-toggle {
+  position:fixed;
+  bottom:max(1.25rem, env(safe-area-inset-bottom, 0px));
+  right:max(1.25rem, env(safe-area-inset-right, 0px));
+  z-index:9990;
+  width:48px; height:48px;
+  display:flex; align-items:center; justify-content:center;
+  padding:0;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:rgba(10,10,10,0.92);
+  backdrop-filter:blur(12px);
+  color:var(--orange);
+  cursor:pointer;
+  box-shadow:0 8px 28px rgba(0,0,0,0.45);
+  transition:border-color .2s, background .2s, color .2s, transform .15s;
+}
+.bg-music-toggle:hover {
+  border-color:rgba(255,107,0,0.45);
+  color:var(--text);
+}
+.bg-music-toggle:focus-visible {
+  outline:2px solid var(--orange); outline-offset:3px;
+}
+.bg-music-toggle svg { width:22px; height:22px; display:block; }
+.bg-music-toggle .icon-pause { display:none; }
+.bg-music-toggle[aria-pressed="true"] .icon-play { display:none; }
+.bg-music-toggle[aria-pressed="true"] .icon-pause { display:block; }
+
 footer {
   padding:2rem 4rem; border-top:1px solid var(--border);
   display:flex; justify-content:space-between; align-items:center;
@@ -1161,6 +1196,12 @@ app = FastAPI()
   <span class="footer-logo">PRABH</span>
 </footer>
 
+<div class="yt-audio-host" aria-hidden="true"><div id="yt-music-player"></div></div>
+<button type="button" id="bgMusicBtn" class="bg-music-toggle" aria-pressed="false" aria-label="Play background music" title="Music on/off">
+  <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+  <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+</button>
+
 <script>
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const useCustomCursor = !prefersReducedMotion && window.matchMedia('(pointer: fine)').matches;
@@ -1307,7 +1348,46 @@ window.addEventListener('scroll', () => {
 
 // Visit counter — POST /api/visit (optional Supabase; see api/visit.js). No PII sent.
 fetch('/api/visit', { method: 'POST', keepalive: true }).catch(function() {});
-// Trigger commit for CI/CD deployment.
+
+// Background music — YouTube IFrame API (https://youtu.be/UDVtMYqUAyw); sound only starts after user taps play
+var bgMusicPlayer = null;
+function onYouTubeIframeAPIReady() {
+  var btn = document.getElementById('bgMusicBtn');
+  if (!btn) return;
+  bgMusicPlayer = new YT.Player('yt-music-player', {
+    width: '1',
+    height: '1',
+    videoId: 'UDVtMYqUAyw',
+    playerVars: {
+      playsinline: 1,
+      controls: 0,
+      modestbranding: 1,
+      rel: 0,
+      origin: window.location.origin
+    },
+    events: {
+      onStateChange: function (e) {
+        var playing = e.data === YT.PlayerState.PLAYING || e.data === YT.PlayerState.BUFFERING;
+        btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+        btn.setAttribute('aria-label', playing ? 'Pause background music' : 'Play background music');
+      }
+    }
+  });
+  btn.addEventListener('click', function () {
+    if (!bgMusicPlayer) return;
+    try {
+      var st = bgMusicPlayer.getPlayerState();
+      if (st === YT.PlayerState.PLAYING) bgMusicPlayer.pauseVideo();
+      else bgMusicPlayer.playVideo();
+    } catch (err) {}
+  });
+}
+(function loadYtIframeApi() {
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScript = document.getElementsByTagName('script')[0];
+  firstScript.parentNode.insertBefore(tag, firstScript);
+})();
 </script>
 </body>
 </html>
