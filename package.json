@@ -2,7 +2,7 @@
   "name": "prabh-portfolio",
   "private": true,
   "dependencies": {
-    "nodemailer": "^6.9.16"
+    "nodemailer": "^9.0.1"
   },
   "devDependencies": {
     "uipro-cli": "^2.2.3"
